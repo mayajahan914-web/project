@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ইসলামিক লোন</title>
+
+<style>
+body {
+  font-family: Arial;
+  background: #f1f4f9;
+  padding: 15px;
+}
+
+.box {
+  max-width: 450px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+}
+
+h2 {
+  text-align: center;
+  color: #1769d2;
+}
+
+input, button {
+  width: 100%;
+  padding: 13px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+button {
+  background: #1769d2;
+  color: white;
+  border: 0;
+  cursor: pointer;
+}
+
+button:active {
+  opacity: 0.8;
+}
+
+#message {
+  text-align: center;
+  color: green;
+  font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>ইসলামিক লোন অর্ডার</h2>
+
+<p>
+<b>পণ্যের নাম:</b> ইসলামিক লোন
+</p>
+
+<p>
+<b>দাম:</b> ২০০০ টাকা
+</p>
+
+<p>
+<b>পেমেন্ট নম্বর:</b> 01936845065
+</p>
+
+<input
+  id="name"
+  placeholder="আপনার নাম">
+
+<input
+  id="phone"
+  placeholder="ফোন নম্বর">
+
+<input
+  id="address"
+  placeholder="ঠিকানা">
+
+<input
+  id="trx"
+  placeholder="Transaction ID">
+
+<button onclick="submitOrder()">
+অর্ডার জমা দিন
+</button>
+
+<p id="message"></p>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
+<script>
+
+const firebaseConfig = {
+  apiKey: "তোমার আগের Firebase API Key",
+  authDomain: "my-online-business-8ff92.firebaseapp.com",
+  projectId: "my-online-business-8ff92",
+  storageBucket: "my-online-business-8ff92.firebasestorage.app",
+  messagingSenderId: "647859392659",
+  appId: "তোমার আগের App ID"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const db = firebase.firestore();
+
+
+async function submitOrder() {
+
+  const n =
+    document.getElementById("name").value.trim();
+
+  const p =
+    document.getElementById("phone").value.trim();
+
+  const a =
+    document.getElementById("address").value.trim();
+
+  const t =
+    document.getElementById("trx").value.trim();
+
+
+  if (!n || !p || !a || !t) {
+
+    alert("সব ঘর পূরণ করুন");
+
+    return;
+  }
+
+
+  try {
+
+    const doc = await db
+      .collection("orders")
+      .add({
+
+        name: n,
+
+        phone: p,
+
+        address: a,
+
+        trx: t,
+
+        status: "Pending",
+
+        createdAt:
+          firebase.firestore.FieldValue
+          .serverTimestamp()
+
+      });
+
+
+    document.getElementById("message")
+      .innerText =
+      "অর্ডার সফল হয়েছে!";
+
+
+    document.getElementById("name").value = "";
+
+    document.getElementById("phone").value = "";
+
+    document.getElementById("address").value = "";
+
+    document.getElementById("trx").value = "";
+
+
+  } catch (error) {
+
+    alert(
+      "অর্ডার জমা হয়নি: " +
+      error.message
+    );
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>
